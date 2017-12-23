@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LocalDrop</title>
+</head>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.js"></script>
+<link rel="stylesheet" href="/bootstrap.min.css" >
+<body onload="listFiles()">
+<h1>LocalDrop</h1>
+<form enctype="multipart/form-data" method="post" name="uploadForm" >
+    <input type="file" id="fileUpload" name="fileUpload">
+</form>
+<button type="button" class="btn btn-secondary btn-lg btn-block" style="margin: 5px" onclick="upload()"> Upload</button>
+<div >
+    <a class="btn btn-info btn-lg btn-block" style="margin: 5px" href="/getLastFile" role="button" >Download Latest File</a>
+</div>
+<button type="button" class="btn btn-outline-success" style="margin: 5px" onclick="listFiles()">Reload Table</button>
+<div id="FileTable">
+</div>
+</body>
+<script id="fileTableTemplate" type="text/x-handlebars-template">
+<div class="container-fluid">
+<table class="table table-hover table-striped table-bordered rounded " style="margin: 5px">
+    <thead class="">
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">File Name</th>
+        <th scope="col">Date</th>
+        <th scope="col">Size</th>
+        <th scope="col">View</th>
+        <th scope="col">Download</th>
+    </tr>
+    </thead>
+<tbody>
+{{#each FileTable}}
+<tr>
+    <th scope="row">{{@index}}</th>
+    <td>{{this.Name}}</td>
+    <td>{{this.ModTime}}</td>
+    <td>{{this.Size}}</td>
+    <td><a class="btn btn-outline-success" href="/viewFile/{{this.Name}}"  role="button">View</a></td>
+    <td><a class="btn btn-outline-info" href="/downLoadFile/{{this.Name}}" target="_blank" role="button" download >Download</a></td>
+</tr>
+{{/each}}
+</tbody>
+</table>
+</div>
+</script>
+<script>
+var upload = function () {
+    var uploadForm=document.forms.namedItem("uploadForm");
+    var formData = new FormData(uploadForm);
+    console.log(JSON.stringify(formData.toString()));
+    var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+if (this.readyState == 4 && this.status == 200) {
+    console.log(this.responseText);
+    var response=JSON.parse(this.responseText);
+if (response.Status==="Ok"){
+    alert(response.Description+" :) ");
+    document.getElementById("fileUpload").value = "";
+}else {
+    alert(response.Description+" :( ");
+
+}
+}
+};
+    xhr.open('POST', '/upload', true);
+    xhr.send(formData);
+};
+
+var listFiles = function() {
+    // TODO make it websocket rather than httpRequest
+    var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+if (this.readyState == 4 && this.status == 200) {
+    var response=JSON.parse(this.responseText);
+if (response.Status !=='Ok'){
+    console.error(response.Status);
+    return;
+}
+    var FileTable=JSON.parse(response.Description);
+console.log(FileTable);
+    var FileTableNode = document.getElementById("FileTable");
+    while (FileTableNode.hasChildNodes()) {
+        FileTableNode.removeChild(FileTableNode.lastChild);
+    }
+    var source   = document.getElementById("fileTableTemplate").innerHTML;
+    var template = Handlebars.compile(source);
+    var context = {FileTable:FileTable};
+    var html    = template(context);
+    FileTableNode.innerHTML=html;
+}
+};
+    xhr.open('POST', '/getAllFiles', true);
+    xhr.send();
+};
+
+
+</script>
+</html>

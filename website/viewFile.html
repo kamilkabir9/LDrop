@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View File</title>
+</head>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.js"></script>
+<link rel="stylesheet" href="/bootstrap.min.css" >
+<style>
+    .col-10 {
+        height:100%;
+    }
+</style>
+<body style="height: 100%">
+
+<h2 id="fileName">File: </h2>
+<div class="" style="height: 100vh">
+        <div class="" style="height: 100%;margin-bottom: 5px;">
+            <iframe  class="container-fluid rounded" style="position: absolute; height: 100%;background-color: #2b4764" src="" id="iframe" frameborder="0">NOT able display</iframe>
+
+        </div>
+        <div class="">
+            <a style="margin: 5px" class="btn btn-outline-success" href="/index.html" role="button">Homepage</a>
+            <a style="margin: 5px" class="btn btn-outline-info" href="" role="button" id="download">Download</a>
+        </div>
+</div>
+</body>
+<script>
+    var requestFile=window.location.pathname;
+    requestFile=requestFile.replace("/viewFile/","");
+    requestFile=decodeURI(requestFile);
+    document.getElementById('fileName').innerHTML+=requestFile;
+    console.log(requestFile);
+    document.getElementById('iframe').src="/getFile/"+requestFile;
+    document.getElementById('download').href="/downLoadFile/"+requestFile;
+
+</script>
+</html>
