@@ -23,7 +23,6 @@ import (
 	"time"
 )
 
-//TODO add flag ignore hidden Folder flag
 const (
 	SuccessStatus = "Ok"
 	FailedStatus  = "Err"
@@ -156,6 +155,14 @@ func main() {
 	uploadFolder, err := filepath.Abs(uploadFolder)
 	if err != nil {
 		log.Panicln(err)
+	}
+	if uploadFolder=="Uploads"{
+		if _, err := os.Stat("Uploads"); os.IsNotExist(err) {
+			err=os.Mkdir("Uploads",0777)
+			if err!=nil{
+				log.Panicln(err)
+			}
+	}
 	}
 	statikFS, err = fs.New()
 	if err != nil {

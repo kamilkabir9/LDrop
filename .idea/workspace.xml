@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6bc10dc3-701c-48e4-a0a0-db9fbd2f065b" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/lDrop.go" afterPath="$PROJECT_DIR$/lDrop.go" />
+      <change beforePath="$PROJECT_DIR$/LDrop.go" afterPath="$PROJECT_DIR$/LDrop.go" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -13,21 +13,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="lDrop.go" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/lDrop.go">
+      <file leaf-file-name="viewFile.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/website/viewFile.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1258">
-              <caret line="7" column="31" lean-forward="false" selection-start-line="7" selection-start-column="31" selection-end-line="7" selection-end-column="31" />
+            <state relative-caret-position="402">
+              <caret line="37" column="74" lean-forward="true" selection-start-line="37" selection-start-column="74" selection-end-line="37" selection-end-column="74" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="viewFile.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/website/viewFile.html">
+      <file leaf-file-name="LDrop.go" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/LDrop.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="425">
-              <caret line="25" column="74" lean-forward="false" selection-start-line="25" selection-start-column="74" selection-end-line="25" selection-end-column="74" />
+            <state relative-caret-position="352">
+              <caret line="160" column="0" lean-forward="false" selection-start-line="160" selection-start-column="0" selection-end-line="160" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -78,6 +78,7 @@
         <option value="$PROJECT_DIR$/website/index.html" />
         <option value="$PROJECT_DIR$/website/viewFile.html" />
         <option value="$PROJECT_DIR$/lDrop.go" />
+        <option value="$PROJECT_DIR$/LDrop.go" />
       </list>
     </option>
   </component>
@@ -108,24 +109,19 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
-              <item name="lDrop" type="b2602c69:ProjectViewProjectNode" />
-              <item name="lDrop" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="lDrop" type="b2602c69:ProjectViewProjectNode" />
-              <item name="lDrop" type="462c0819:PsiDirectoryNode" />
-              <item name="website" type="462c0819:PsiDirectoryNode" />
+              <item name="LDrop" type="b2602c69:ProjectViewProjectNode" />
+              <item name="LDrop" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -336,18 +332,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/website/viewFile.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="25" column="74" lean-forward="false" selection-start-line="25" selection-start-column="74" selection-end-line="25" selection-end-column="74" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lDrop.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1258">
           <caret line="7" column="31" lean-forward="false" selection-start-line="7" selection-start-column="31" selection-end-line="7" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/website/viewFile.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="402">
+          <caret line="37" column="74" lean-forward="true" selection-start-line="37" selection-start-column="74" selection-end-line="37" selection-end-column="74" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/LDrop.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="352">
+          <caret line="160" column="0" lean-forward="false" selection-start-line="160" selection-start-column="0" selection-end-line="160" selection-end-column="0" />
           <folding />
         </state>
       </provider>
