@@ -5,7 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/dustin/go-humanize"
-	_ "github.com/kamilkabir9/lDrop/statik" // TODO: Replace with the absolute import path
+	_ "github.com/kamilkabir9/LDrop/statik" // TODO: Replace with the absolute import path
 	"github.com/mdp/qrterminal"
 	"github.com/rakyll/statik/fs"
 	"github.com/skratchdot/open-golang/open"
