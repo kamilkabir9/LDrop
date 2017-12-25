@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -38,6 +39,7 @@ type onlySuffixFilter struct {
 var oSF onlySuffixFilter
 
 var verbose func(string)
+
 func (filter *onlySuffixFilter) Set(value string) error {
 	filter.set = true
 	filter.suffix = strings.Split(value, ",")
@@ -132,7 +134,7 @@ func (filter *ignoreSuffixFilter) String() string {
 }
 
 func filterFile(fileName string) bool {
-	if iSF.filterFile(fileName) || iPF.filterFile(fileName) ||(ignoreHiddenFilesFlag &&strings.HasPrefix(fileName,"."))|| oSF.filterFile(fileName) {
+	if iSF.filterFile(fileName) || iPF.filterFile(fileName) || (ignoreHiddenFilesFlag && strings.HasPrefix(fileName, ".")) || oSF.filterFile(fileName) {
 		return true
 	}
 	return false
@@ -143,9 +145,26 @@ var ignoreHiddenFoldersFlag bool
 var ignoreHiddenFilesFlag bool
 var verboseFlag bool
 var err error
+var secretFlag string
+
+func checkSecret(secretEncoded string) bool {
+	fmt.Println("got:", secretEncoded)
+	secretByte, err := base64.URLEncoding.DecodeString(secretEncoded)
+	if err != nil {
+		log.Println(err)
+	}
+	secretRecvd := string(secretByte)
+	if secretRecvd == secretFlag {
+		fmt.Printf("Passed %v==%v", secretRecvd, secretFlag)
+		return true
+	}
+	fmt.Printf("Failed %v=!%v !!!!!!", secretRecvd, secretFlag)
+	return false
+}
 func main() {
 	log.SetFlags(log.Lshortfile)
 	flag.StringVar(&uploadFolder, "folder", uploadFolder, "Root Folder")
+	flag.StringVar(&secretFlag, "secret", "007Jb", "Pass secret code.")
 	flag.Var(&iSF, "ignoreSuffix", "Pass file SUFFIX to exclude Example:\".png,.mp4\"")
 	flag.Var(&iPF, "ignorePreffix", "Pass file PREFFIX to exclude Example:\"PIC-,MOV-\"")
 	flag.Var(&oSF, "onlySuffix", "Pass file SUFFIX to only to include")
@@ -153,12 +172,12 @@ func main() {
 	flag.BoolVar(&ignoreHiddenFilesFlag, "ignoreHiddenFiles", false, "Pass True to ignore hidden Folders")
 	flag.BoolVar(&verboseFlag, "v", false, "Pass true to print verbose info")
 	flag.Parse()
-	if verboseFlag{
-		verbose= func(s string) {
+	if verboseFlag {
+		verbose = func(s string) {
 			fmt.Println(s)
 		}
-	}else {
-		verbose= func(s string) {
+	} else {
+		verbose = func(s string) {
 		}
 	}
 	uploadFolder, err = filepath.Abs(uploadFolder)
@@ -184,7 +203,7 @@ func main() {
 	}
 
 	port := strconv.Itoa(listener.Addr().(*net.TCPAddr).Port)
-	fmt.Printf("Strarting Server...\n########################\nFolder:%v\nIP address: %v:%v\nverbose:%v\nFiltering rules\n------------------------\nIgnoring Files with Suffix(-ignoreSuffix):%v\nIgnoring Files with Preffix(-ignorePreffix):%v\nShowing Files ony with Suffix(-onlySuffix):%v\nHide Hidden Files(-ignoreHiddenFiles):%v\nHide Hidden Folders(-ignoreHiddenFolders):%v\n------------------------\n########################\n",  uploadFolder, GetOutboundIP(), port,verboseFlag, iSF.String(), iPF.String(), oSF.String(), ignoreHiddenFilesFlag, ignoreHiddenFoldersFlag)
+	fmt.Printf("Strarting Server...\n########################\nFolder:%v\nSecret:%v\nIP address: %v:%v\nverbose:%v\nFiltering rules\n------------------------\nIgnoring Files with Suffix(-ignoreSuffix):%v\nIgnoring Files with Preffix(-ignorePreffix):%v\nShowing Files ony with Suffix(-onlySuffix):%v\nHide Hidden Files(-ignoreHiddenFiles):%v\nHide Hidden Folders(-ignoreHiddenFolders):%v\n------------------------\n########################\n", uploadFolder, secretFlag, GetOutboundIP(), port, verboseFlag, iSF.String(), iPF.String(), oSF.String(), ignoreHiddenFilesFlag, ignoreHiddenFoldersFlag)
 	fmt.Println("Scan QRCode to get IP address")
 	qrterminal.Generate(fmt.Sprintf("%v:%v", GetOutboundIP(), port), qrterminal.M, os.Stdout)
 	open.Start(fmt.Sprintf("http://%v:%v", GetOutboundIP(), port))
@@ -354,7 +373,7 @@ func getAllFilesConcurrent(Dir string, fileNamesWithTime *[]fileInfo) {
 			if !(ignoreHiddenFoldersFlag && strings.HasPrefix(file.Name(), ".")) {
 				wg.Add(1)
 				go getAllFilesConcurrent(filepath.Join(Dir, file.Name()), fileNamesWithTime)
-			}else if !ignoreHiddenFoldersFlag {
+			} else if !ignoreHiddenFoldersFlag {
 				wg.Add(1)
 				go getAllFilesConcurrent(filepath.Join(Dir, file.Name()), fileNamesWithTime)
 			}
@@ -365,6 +384,10 @@ func getAllFilesConcurrent(Dir string, fileNamesWithTime *[]fileInfo) {
 
 func getAllFilesHandler(w http.ResponseWriter, r *http.Request) {
 	verbose(fmt.Sprint("getting All files.."))
+	if !checkSecret(r.Header.Get("secret")){
+		verbose("Got wrong secret from client")
+		return
+	}
 	var fileNamesWithTime = getAllFiles()
 	fileNamesJson, err := json.Marshal(fileNamesWithTime)
 	if err != nil {

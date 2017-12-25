@@ -8,6 +8,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.js"></script>
+        <script src="/js.cookie.js"></script>
 <link rel="stylesheet" href="/bootstrap.min.css" >
 <body onload="listFiles()">
 <h1>LocalDrop</h1>
@@ -51,6 +52,21 @@
 </div>
 </script>
 <script>
+        var getSecret=function(){
+            var secret=Cookies.get('secret');
+            if (secret===undefined){
+                console.log("secret not Set !!!!");
+                var secretPrompt = prompt("Please enter secret:", "007Jb");
+    if (secretPrompt == null || secretPrompt === "") {
+        console.log("plz enter secret !?");
+    } else {
+    Cookies.set('secret',secretPrompt);
+    console.log("set secret as "+secretPrompt);
+    }
+            }
+            secret=Cookies.get('secret');
+            return secret;
+        };
 var upload = function () {
     var uploadForm=document.forms.namedItem("uploadForm");
     var formData = new FormData(uploadForm);
@@ -71,6 +87,7 @@ if (response.Status==="Ok"){
 }
 };
     xhr.open('POST', '/upload', true);
+    xhr.setRequestHeader("secret", "007");
     xhr.send(formData);
 };
 
@@ -85,7 +102,7 @@ if (response.Status !=='Ok'){
     return;
 }
     var FileTable=JSON.parse(response.Description);
-console.log(FileTable);
+    console.log(FileTable);
     var FileTableNode = document.getElementById("FileTable");
     while (FileTableNode.hasChildNodes()) {
         FileTableNode.removeChild(FileTableNode.lastChild);
@@ -98,6 +115,8 @@ console.log(FileTable);
 }
 };
     xhr.open('POST', '/getAllFiles', true);
+    var secret=btoa(getSecret());
+    xhr.setRequestHeader("secret", secret);
     xhr.send();
 };
 
