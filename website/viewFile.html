@@ -8,6 +8,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.js"></script>
+<script src="/js.cookie.js"></script>
+        <script src="/md5.min.js"></script>
 <link rel="stylesheet" href="/bootstrap.min.css" >
 <style>
     .col-10 {
@@ -30,13 +32,29 @@
 </body>
 <script>
     {{/*TODO add     xhr.setRequestHeader("secret", "007"); as url param*/}}
+    var getSecret=function(){
+            var secret=Cookies.get('secret');
+            if (secret===undefined){
+                console.log("secret not Set !!!!");
+                var secretPrompt = prompt("Please enter secret:", "007Jb");
+    if (secretPrompt == null || secretPrompt === "") {
+        console.log("plz enter secret !?");
+    } else {
+    Cookies.set('secret',secretPrompt);
+    console.log("set secret as "+secretPrompt);
+    }
+            }
+            secret=Cookies.get('secret');
+            return md5(secret);
+        };
     var requestFile=window.location.pathname;
-    requestFile=requestFile.replace("/viewFile/","");
     requestFile=decodeURI(requestFile);
     document.getElementById('fileName').innerHTML+=requestFile;
     console.log(requestFile);
-    document.getElementById('iframe').src="/getFile/"+requestFile;
-    document.getElementById('download').href="/downLoadFile/"+requestFile;
+    requestFile=requestFile.replace("/viewFile/","");
+    // title=Main_page&action=raw
+    document.getElementById('iframe').src="/getFile/?secret="+getSecret()+"&fileName="+requestFile;
+    document.getElementById('download').href="/downLoadFile/?secret="+getSecret()+"&fileName="+requestFile;
 
 </script>
 </html>

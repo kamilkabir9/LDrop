@@ -9,6 +9,7 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.js"></script>
         <script src="/js.cookie.js"></script>
+        <script src="/md5.min.js"></script>
 <link rel="stylesheet" href="/bootstrap.min.css" >
 <body onload="listFiles()">
 <h1>LocalDrop</h1>
@@ -44,7 +45,7 @@
     <td>{{this.ModTime}}</td>
     <td>{{this.Size}}</td>
     <td><a class="btn btn-outline-success" href="/viewFile/{{this.Name}}"  role="button">View</a></td>
-    <td><a class="btn btn-outline-info" href="/downLoadFile/{{this.Name}}" target="_blank" role="button" download >Download</a></td>
+    <td><a class="btn btn-outline-info" href="/downLoadFile/?secret={{../Secret}}&fileName={{this.Name}}" target="_blank" role="button" download >Download</a></td>
 </tr>
 {{/each}}
 </tbody>
@@ -52,6 +53,7 @@
 </div>
 </script>
 <script>
+
         var getSecret=function(){
             var secret=Cookies.get('secret');
             if (secret===undefined){
@@ -65,8 +67,9 @@
     }
             }
             secret=Cookies.get('secret');
-            return secret;
+            return md5(secret);
         };
+
 var upload = function () {
     var uploadForm=document.forms.namedItem("uploadForm");
     var formData = new FormData(uploadForm);
@@ -87,7 +90,7 @@ if (response.Status==="Ok"){
 }
 };
     xhr.open('POST', '/upload', true);
-    xhr.setRequestHeader("secret", "007");
+    xhr.setRequestHeader("secret", secret);
     xhr.send(formData);
 };
 
@@ -96,30 +99,37 @@ var listFiles = function() {
     var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function() {
 if (this.readyState == 4 && this.status == 200) {
-    var response=JSON.parse(this.responseText);
-if (response.Status !=='Ok'){
+    var response = JSON.parse(this.responseText);
+if (response.Status === 'Err' && response.Description === "secret mismatch"){
     console.error(response.Status);
+    var secretPrompt = prompt("Secret mismatch. Please enter secret:", "");
+if (secretPrompt == null || secretPrompt === "") {
+    console.log("plz enter secret !?");
+} else {
+    Cookies.set('secret', secretPrompt);
+    console.log("set secret as " + secretPrompt);
+}
     return;
 }
-    var FileTable=JSON.parse(response.Description);
+
+    var FileTable = JSON.parse(response.Description);
     console.log(FileTable);
     var FileTableNode = document.getElementById("FileTable");
     while (FileTableNode.hasChildNodes()) {
         FileTableNode.removeChild(FileTableNode.lastChild);
     }
-    var source   = document.getElementById("fileTableTemplate").innerHTML;
+    var source = document.getElementById("fileTableTemplate").innerHTML;
     var template = Handlebars.compile(source);
-    var context = {FileTable:FileTable};
-    var html    = template(context);
-    FileTableNode.innerHTML=html;
-}
-};
+    var context = {FileTable: FileTable,Secret:getSecret()};
+    var html = template(context);
+    FileTableNode.innerHTML = html;
+
+}};
     xhr.open('POST', '/getAllFiles', true);
-    var secret=btoa(getSecret());
-    xhr.setRequestHeader("secret", secret);
+    xhr.setRequestHeader("secret", getSecret());
     xhr.send();
 };
-
+listFiles();
 
 </script>
 </html>

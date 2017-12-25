@@ -1,12 +1,11 @@
 package main
 
 import (
-	"encoding/base64"
 	"encoding/json"
 	"flag"
 	"fmt"
 	"github.com/dustin/go-humanize"
-	_ "github.com/kamilkabir9/LDrop/statik" // TODO: Replace with the absolute import path
+	_ "github.com/kamilkabir9/LDrop/statik" // NOTE: Replace with the absolute import path
 	"github.com/mdp/qrterminal"
 	"github.com/rakyll/statik/fs"
 	"github.com/skratchdot/open-golang/open"
@@ -22,6 +21,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+	"crypto/md5"
+	"encoding/hex"
 )
 
 const (
@@ -146,19 +147,12 @@ var ignoreHiddenFilesFlag bool
 var verboseFlag bool
 var err error
 var secretFlag string
-
+var secretFlagMD5 string
 func checkSecret(secretEncoded string) bool {
-	fmt.Println("got:", secretEncoded)
-	secretByte, err := base64.URLEncoding.DecodeString(secretEncoded)
-	if err != nil {
-		log.Println(err)
-	}
-	secretRecvd := string(secretByte)
-	if secretRecvd == secretFlag {
-		fmt.Printf("Passed %v==%v", secretRecvd, secretFlag)
+	if secretEncoded== secretFlagMD5 {
 		return true
 	}
-	fmt.Printf("Failed %v=!%v !!!!!!", secretRecvd, secretFlag)
+	verbose(fmt.Sprintf("Secret Failed %v=!%v !!!!!!", secretEncoded, secretFlagMD5))
 	return false
 }
 func main() {
@@ -180,6 +174,9 @@ func main() {
 		verbose = func(s string) {
 		}
 	}
+	hasher := md5.New()
+	hasher.Write([]byte(secretFlag))
+	secretFlagMD5=hex.EncodeToString(hasher.Sum(nil))
 	uploadFolder, err = filepath.Abs(uploadFolder)
 	if err != nil {
 		log.Panicln(err)
@@ -190,11 +187,11 @@ func main() {
 	}
 	http.HandleFunc("/viewFile/", viewFileHandler)
 	http.Handle("/", http.FileServer(statikFS))
-	http.HandleFunc("/upload", upLoadHandler)
-	http.HandleFunc("/getLastFile", getLastFileHandler)
-	http.HandleFunc("/getAllFiles", getAllFilesHandler)
-	http.HandleFunc("/getFile/", getFileHandler)
-	http.HandleFunc("/downLoadFile/", serveThisFileHandler)
+	http.HandleFunc("/upload", upLoadHandler)               //api
+	http.HandleFunc("/getLastFile", getLastFileHandler)     //api
+	http.HandleFunc("/getAllFiles", getAllFilesHandler)     //api
+	http.HandleFunc("/getFile/", getFileHandler)            //api
+	http.HandleFunc("/downLoadFile/", serveThisFileHandler) //api
 
 	//Adapted from https://stackoverflow.com/questions/43424787/how-to-use-next-available-port-in-http-listenandserve
 	listener, err := net.Listen("tcp", ":0")
@@ -246,11 +243,15 @@ func UploadStatusJson(status string, desc string) string {
 func upLoadHandler(w http.ResponseWriter, r *http.Request) {
 
 	verbose(fmt.Sprintln("Downloading File....."))
-
 	file, fileHeader, err := r.FormFile("fileUpload")
 	if err != nil {
 		log.Println(err)
 		result := UploadStatusJson(FailedStatus, fmt.Sprint(err))
+		fmt.Fprint(w, result)
+		return
+	}
+	if !checkSecret(r.Header.Get("secret")) {
+		result := UploadStatusJson(FailedStatus, fmt.Sprintf("Error Uploading file %v. Secret mismatch !!!", fileHeader.Filename))
 		fmt.Fprint(w, result)
 		return
 	}
@@ -309,6 +310,12 @@ func getUniqFileName(filename string) string {
 }
 
 func getLastFileHandler(w http.ResponseWriter, r *http.Request) {
+	if !checkSecret(r.Header.Get("secret")) {
+		verbose("Got wrong secret from client")
+		result := UploadStatusJson(FailedStatus, fmt.Sprintf("Error getting last file. Secret mismatch !!!"))
+		fmt.Fprint(w, result)
+		return
+	}
 	fileList := getAllFiles()
 	lastFile := fileList[0]
 	for _, file := range fileList {
@@ -384,8 +391,10 @@ func getAllFilesConcurrent(Dir string, fileNamesWithTime *[]fileInfo) {
 
 func getAllFilesHandler(w http.ResponseWriter, r *http.Request) {
 	verbose(fmt.Sprint("getting All files.."))
-	if !checkSecret(r.Header.Get("secret")){
+	if !checkSecret(r.Header.Get("secret")) {
 		verbose("Got wrong secret from client")
+		result := UploadStatusJson(FailedStatus, "secret mismatch")
+	fmt.Fprintln(w, result)
 		return
 	}
 	var fileNamesWithTime = getAllFiles()
@@ -402,24 +411,62 @@ func getAllFilesHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func getFileHandler(w http.ResponseWriter, r *http.Request) {
-	fileName := r.URL.Path
-	fileName = strings.Replace(fileName, "/getFile/", "", -1)
-	fileName, err := url.QueryUnescape(fileName)
+	u, err := url.ParseQuery(r.URL.RawQuery)
+    if err != nil {
+        panic(err)
+    }
+	fileName :=u["fileName"][0]
+	if fileName==""{
+		verbose("Error getting file name !!!")
+		fmt.Fprint(w, fmt.Sprintf("Error getting file name from URL !!!"))
+		return
+	}
+	fileName, err = url.QueryUnescape(fileName)
 	if err != nil {
 		log.Println(err)
 	}
-	log.Println(fileName)
+	secretRcvd :=u["secret"][0]
+	if secretRcvd==""{
+		verbose("Error getting file name !!!")
+		fmt.Fprint(w, fmt.Sprintf("Error getting secret URL !!!"))
+		return
+	}
+	if !checkSecret(secretRcvd) {
+		verbose("Got wrong secret from client")
+		fmt.Fprint(w, fmt.Sprintf("Error getting file:%v. Secret mismatch !!!", fileName))
+		return
+	}
 	verbose(fmt.Sprintln("getting File : ", fileName))
 	http.ServeFile(w, r, path.Join(uploadFolder, fileName))
 	//http.ServeContent(w, r, path.Join(uploadFolder, fileName))
 
 }
 func serveThisFileHandler(w http.ResponseWriter, r *http.Request) {
-	fileName := r.URL.Path
-	fileName = strings.Replace(fileName, "/downLoadFile/", "", -1)
-	fileName, err := url.QueryUnescape(fileName)
+	u, err := url.ParseQuery(r.URL.RawQuery)
+    if err != nil {
+        panic(err)
+    }
+	fileName :=u["fileName"][0]
+	if fileName==""{
+		verbose("Error getting file name !!!")
+		fmt.Fprint(w, fmt.Sprintf("Error getting file name from URL !!!"))
+		return
+	}
+	fileName, err = url.QueryUnescape(fileName)
 	if err != nil {
 		log.Println(err)
+	}
+	secretRcvd :=u["secret"][0]
+	if secretRcvd==""{
+		verbose("Error getting file name !!!")
+		fmt.Fprint(w, fmt.Sprintf("Error getting secret URL !!!"))
+		return
+	}
+	if !checkSecret(secretRcvd) {
+		verbose("Got wrong secret from client")
+		result := UploadStatusJson(FailedStatus, fmt.Sprintf("Error getting file:%v. Secret mismatch !!!", fileName))
+		fmt.Fprint(w, result)
+		return
 	}
 	verbose(fmt.Sprintln("serving File : ", fileName))
 	//Adapted from https://stackoverflow.com/questions/31638447/how-to-server-a-file-from-a-handler-in-golang
