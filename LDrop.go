@@ -177,7 +177,8 @@ func main() {
 	hasher := md5.New()
 	hasher.Write([]byte(secretFlag))
 	secretFlagMD5=hex.EncodeToString(hasher.Sum(nil))
-	uploadFolder, err = filepath.Abs(uploadFolder)
+	wd,err:=os.Getwd()
+	uploadFolder, err = filepath.Abs(wd)
 	if err != nil {
 		log.Panicln(err)
 	}

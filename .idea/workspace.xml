@@ -2,11 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6bc10dc3-701c-48e4-a0a0-db9fbd2f065b" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/LDrop.go" afterPath="$PROJECT_DIR$/LDrop.go" />
-      <change beforePath="$PROJECT_DIR$/statik/statik.go" afterPath="$PROJECT_DIR$/statik/statik.go" />
-      <change beforePath="$PROJECT_DIR$/website/index.html" afterPath="$PROJECT_DIR$/website/index.html" />
-      <change beforePath="$PROJECT_DIR$/website/viewFile.html" afterPath="$PROJECT_DIR$/website/viewFile.html" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -20,8 +18,8 @@
       <file leaf-file-name="LDrop.go" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/LDrop.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="108">
-              <caret line="154" column="32" lean-forward="false" selection-start-line="154" selection-start-column="32" selection-end-line="154" selection-end-column="32" />
+            <state relative-caret-position="-351">
+              <caret line="159" column="46" lean-forward="false" selection-start-line="159" selection-start-column="46" selection-end-line="159" selection-end-column="46" />
               <folding>
                 <element signature="e#14#428#0" expanded="true" />
                 <element signature="e#430#484#0" expanded="false" />
@@ -55,51 +53,50 @@
                 <element signature="e#3815#3838#0" expanded="false" />
                 <element signature="e#3847#3884#0" expanded="false" />
                 <element signature="e#3876#3881#0" expanded="false" />
-                <element signature="e#4054#4077#0" expanded="false" />
-                <element signature="e#4119#4140#0" expanded="false" />
-                <element signature="e#4722#4739#0" expanded="false" />
-                <element signature="e#5641#5674#0" expanded="false" />
+                <element signature="e#4129#4150#0" expanded="false" />
+                <element signature="e#4732#4749#0" expanded="false" />
+                <element signature="e#5651#5684#0" expanded="false" />
                 <element signature="n#!!block;n#GetOutboundIP#0" expanded="false" />
-                <element signature="e#5867#5888#0" expanded="false" />
+                <element signature="e#5877#5898#0" expanded="false" />
                 <element signature="n#!!block;n#staticHandler#0" expanded="false" />
                 <element signature="n#!!block;n#UploadStatusJson#0" expanded="false" />
-                <element signature="e#6214#6267#0" expanded="false" />
-                <element signature="e#6298#6312#0" expanded="false" />
-                <element signature="e#6369#6480#0" expanded="false" />
-                <element signature="e#6683#6799#0" expanded="false" />
-                <element signature="e#6841#7003#0" expanded="false" />
-                <element signature="e#7061#7096#0" expanded="false" />
-                <element signature="e#7113#7229#0" expanded="false" />
-                <element signature="e#7285#7401#0" expanded="false" />
-                <element signature="e#7508#7634#0" expanded="false" />
+                <element signature="e#6224#6277#0" expanded="false" />
+                <element signature="e#6308#6322#0" expanded="false" />
+                <element signature="e#6379#6490#0" expanded="false" />
+                <element signature="e#6693#6809#0" expanded="false" />
+                <element signature="e#6851#7013#0" expanded="false" />
+                <element signature="e#7071#7106#0" expanded="false" />
+                <element signature="e#7123#7239#0" expanded="false" />
+                <element signature="e#7295#7411#0" expanded="false" />
+                <element signature="e#7518#7644#0" expanded="false" />
                 <element signature="n#!!block;n#getUniqFileName#0" expanded="false" />
-                <element signature="e#8218#8536#0" expanded="false" />
-                <element signature="e#8292#8315#0" expanded="false" />
-                <element signature="e#8321#8533#0" expanded="false" />
+                <element signature="e#8228#8546#0" expanded="false" />
+                <element signature="e#8302#8325#0" expanded="false" />
+                <element signature="e#8331#8543#0" expanded="false" />
                 <element signature="n#!!block;n#getLastFileHandler#0" expanded="false" />
-                <element signature="e#8670#8853#0" expanded="false" />
-                <element signature="e#8937#9019#0" expanded="false" />
-                <element signature="e#8992#9016#0" expanded="false" />
-                <element signature="e#9514#9609#0" expanded="false" />
-                <element signature="e#9624#9702#0" expanded="false" />
+                <element signature="e#8680#8863#0" expanded="false" />
+                <element signature="e#8947#9029#0" expanded="false" />
+                <element signature="e#9002#9026#0" expanded="false" />
+                <element signature="e#9524#9619#0" expanded="false" />
+                <element signature="e#9634#9712#0" expanded="false" />
                 <element signature="n#!!block;n#getAllFiles#0" expanded="false" />
                 <element signature="n#!!block;n#getAllFilesConcurrent#0" expanded="false" />
-                <element signature="e#10221#10254#0" expanded="false" />
-                <element signature="e#10286#11108#0" expanded="false" />
-                <element signature="e#10308#10785#0" expanded="false" />
-                <element signature="e#10366#10385#0" expanded="false" />
-                <element signature="e#10599#10765#0" expanded="false" />
-                <element signature="e#10695#10764#0" expanded="false" />
-                <element signature="e#10791#11105#0" expanded="false" />
-                <element signature="e#10865#10966#0" expanded="false" />
-                <element signature="e#11000#11101#0" expanded="false" />
+                <element signature="e#10231#10264#0" expanded="false" />
+                <element signature="e#10296#11118#0" expanded="false" />
+                <element signature="e#10318#10795#0" expanded="false" />
+                <element signature="e#10376#10395#0" expanded="false" />
+                <element signature="e#10609#10775#0" expanded="false" />
+                <element signature="e#10705#10774#0" expanded="false" />
+                <element signature="e#10801#11115#0" expanded="false" />
+                <element signature="e#10875#10976#0" expanded="false" />
+                <element signature="e#11010#11111#0" expanded="false" />
                 <element signature="n#!!block;n#getAllFilesHandler#0" expanded="false" />
-                <element signature="e#11274#11416#0" expanded="false" />
-                <element signature="e#11526#11654#0" expanded="false" />
-                <element signature="e#12135#12158#0" expanded="false" />
-                <element signature="e#13050#13073#0" expanded="false" />
-                <element signature="e#13266#13457#0" expanded="false" />
-                <element signature="e#14041#14064#0" expanded="false" />
+                <element signature="e#11284#11426#0" expanded="false" />
+                <element signature="e#11536#11664#0" expanded="false" />
+                <element signature="e#12145#12168#0" expanded="false" />
+                <element signature="e#13060#13083#0" expanded="false" />
+                <element signature="e#13276#13467#0" expanded="false" />
+                <element signature="e#14051#14074#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -366,51 +363,50 @@
             <element signature="e#3815#3838#0" expanded="false" />
             <element signature="e#3847#3884#0" expanded="false" />
             <element signature="e#3876#3881#0" expanded="false" />
-            <element signature="e#4054#4077#0" expanded="false" />
-            <element signature="e#4119#4140#0" expanded="false" />
-            <element signature="e#4722#4739#0" expanded="false" />
-            <element signature="e#5641#5674#0" expanded="false" />
+            <element signature="e#4129#4150#0" expanded="false" />
+            <element signature="e#4732#4749#0" expanded="false" />
+            <element signature="e#5651#5684#0" expanded="false" />
             <element signature="n#!!block;n#GetOutboundIP#0" expanded="false" />
-            <element signature="e#5867#5888#0" expanded="false" />
+            <element signature="e#5877#5898#0" expanded="false" />
             <element signature="n#!!block;n#staticHandler#0" expanded="false" />
             <element signature="n#!!block;n#UploadStatusJson#0" expanded="false" />
-            <element signature="e#6214#6267#0" expanded="false" />
-            <element signature="e#6298#6312#0" expanded="false" />
-            <element signature="e#6369#6480#0" expanded="false" />
-            <element signature="e#6683#6799#0" expanded="false" />
-            <element signature="e#6841#7003#0" expanded="false" />
-            <element signature="e#7061#7096#0" expanded="false" />
-            <element signature="e#7113#7229#0" expanded="false" />
-            <element signature="e#7285#7401#0" expanded="false" />
-            <element signature="e#7508#7634#0" expanded="false" />
+            <element signature="e#6224#6277#0" expanded="false" />
+            <element signature="e#6308#6322#0" expanded="false" />
+            <element signature="e#6379#6490#0" expanded="false" />
+            <element signature="e#6693#6809#0" expanded="false" />
+            <element signature="e#6851#7013#0" expanded="false" />
+            <element signature="e#7071#7106#0" expanded="false" />
+            <element signature="e#7123#7239#0" expanded="false" />
+            <element signature="e#7295#7411#0" expanded="false" />
+            <element signature="e#7518#7644#0" expanded="false" />
             <element signature="n#!!block;n#getUniqFileName#0" expanded="false" />
-            <element signature="e#8218#8536#0" expanded="false" />
-            <element signature="e#8292#8315#0" expanded="false" />
-            <element signature="e#8321#8533#0" expanded="false" />
+            <element signature="e#8228#8546#0" expanded="false" />
+            <element signature="e#8302#8325#0" expanded="false" />
+            <element signature="e#8331#8543#0" expanded="false" />
             <element signature="n#!!block;n#getLastFileHandler#0" expanded="false" />
-            <element signature="e#8670#8853#0" expanded="false" />
-            <element signature="e#8937#9019#0" expanded="false" />
-            <element signature="e#8992#9016#0" expanded="false" />
-            <element signature="e#9514#9609#0" expanded="false" />
-            <element signature="e#9624#9702#0" expanded="false" />
+            <element signature="e#8680#8863#0" expanded="false" />
+            <element signature="e#8947#9029#0" expanded="false" />
+            <element signature="e#9002#9026#0" expanded="false" />
+            <element signature="e#9524#9619#0" expanded="false" />
+            <element signature="e#9634#9712#0" expanded="false" />
             <element signature="n#!!block;n#getAllFiles#0" expanded="false" />
             <element signature="n#!!block;n#getAllFilesConcurrent#0" expanded="false" />
-            <element signature="e#10221#10254#0" expanded="false" />
-            <element signature="e#10286#11108#0" expanded="false" />
-            <element signature="e#10308#10785#0" expanded="false" />
-            <element signature="e#10366#10385#0" expanded="false" />
-            <element signature="e#10599#10765#0" expanded="false" />
-            <element signature="e#10695#10764#0" expanded="false" />
-            <element signature="e#10791#11105#0" expanded="false" />
-            <element signature="e#10865#10966#0" expanded="false" />
-            <element signature="e#11000#11101#0" expanded="false" />
+            <element signature="e#10231#10264#0" expanded="false" />
+            <element signature="e#10296#11118#0" expanded="false" />
+            <element signature="e#10318#10795#0" expanded="false" />
+            <element signature="e#10376#10395#0" expanded="false" />
+            <element signature="e#10609#10775#0" expanded="false" />
+            <element signature="e#10705#10774#0" expanded="false" />
+            <element signature="e#10801#11115#0" expanded="false" />
+            <element signature="e#10875#10976#0" expanded="false" />
+            <element signature="e#11010#11111#0" expanded="false" />
             <element signature="n#!!block;n#getAllFilesHandler#0" expanded="false" />
-            <element signature="e#11274#11416#0" expanded="false" />
-            <element signature="e#11526#11654#0" expanded="false" />
-            <element signature="e#12135#12158#0" expanded="false" />
-            <element signature="e#13050#13073#0" expanded="false" />
-            <element signature="e#13266#13457#0" expanded="false" />
-            <element signature="e#14041#14064#0" expanded="false" />
+            <element signature="e#11284#11426#0" expanded="false" />
+            <element signature="e#11536#11664#0" expanded="false" />
+            <element signature="e#12145#12168#0" expanded="false" />
+            <element signature="e#13060#13083#0" expanded="false" />
+            <element signature="e#13276#13467#0" expanded="false" />
+            <element signature="e#14051#14074#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -530,8 +526,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/LDrop.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="154" column="32" lean-forward="false" selection-start-line="154" selection-start-column="32" selection-end-line="154" selection-end-column="32" />
+        <state relative-caret-position="-351">
+          <caret line="159" column="46" lean-forward="false" selection-start-line="159" selection-start-column="46" selection-end-line="159" selection-end-column="46" />
           <folding>
             <element signature="e#14#428#0" expanded="true" />
             <element signature="e#430#484#0" expanded="false" />
@@ -565,51 +561,50 @@
             <element signature="e#3815#3838#0" expanded="false" />
             <element signature="e#3847#3884#0" expanded="false" />
             <element signature="e#3876#3881#0" expanded="false" />
-            <element signature="e#4054#4077#0" expanded="false" />
-            <element signature="e#4119#4140#0" expanded="false" />
-            <element signature="e#4722#4739#0" expanded="false" />
-            <element signature="e#5641#5674#0" expanded="false" />
+            <element signature="e#4129#4150#0" expanded="false" />
+            <element signature="e#4732#4749#0" expanded="false" />
+            <element signature="e#5651#5684#0" expanded="false" />
             <element signature="n#!!block;n#GetOutboundIP#0" expanded="false" />
-            <element signature="e#5867#5888#0" expanded="false" />
+            <element signature="e#5877#5898#0" expanded="false" />
             <element signature="n#!!block;n#staticHandler#0" expanded="false" />
             <element signature="n#!!block;n#UploadStatusJson#0" expanded="false" />
-            <element signature="e#6214#6267#0" expanded="false" />
-            <element signature="e#6298#6312#0" expanded="false" />
-            <element signature="e#6369#6480#0" expanded="false" />
-            <element signature="e#6683#6799#0" expanded="false" />
-            <element signature="e#6841#7003#0" expanded="false" />
-            <element signature="e#7061#7096#0" expanded="false" />
-            <element signature="e#7113#7229#0" expanded="false" />
-            <element signature="e#7285#7401#0" expanded="false" />
-            <element signature="e#7508#7634#0" expanded="false" />
+            <element signature="e#6224#6277#0" expanded="false" />
+            <element signature="e#6308#6322#0" expanded="false" />
+            <element signature="e#6379#6490#0" expanded="false" />
+            <element signature="e#6693#6809#0" expanded="false" />
+            <element signature="e#6851#7013#0" expanded="false" />
+            <element signature="e#7071#7106#0" expanded="false" />
+            <element signature="e#7123#7239#0" expanded="false" />
+            <element signature="e#7295#7411#0" expanded="false" />
+            <element signature="e#7518#7644#0" expanded="false" />
             <element signature="n#!!block;n#getUniqFileName#0" expanded="false" />
-            <element signature="e#8218#8536#0" expanded="false" />
-            <element signature="e#8292#8315#0" expanded="false" />
-            <element signature="e#8321#8533#0" expanded="false" />
+            <element signature="e#8228#8546#0" expanded="false" />
+            <element signature="e#8302#8325#0" expanded="false" />
+            <element signature="e#8331#8543#0" expanded="false" />
             <element signature="n#!!block;n#getLastFileHandler#0" expanded="false" />
-            <element signature="e#8670#8853#0" expanded="false" />
-            <element signature="e#8937#9019#0" expanded="false" />
-            <element signature="e#8992#9016#0" expanded="false" />
-            <element signature="e#9514#9609#0" expanded="false" />
-            <element signature="e#9624#9702#0" expanded="false" />
+            <element signature="e#8680#8863#0" expanded="false" />
+            <element signature="e#8947#9029#0" expanded="false" />
+            <element signature="e#9002#9026#0" expanded="false" />
+            <element signature="e#9524#9619#0" expanded="false" />
+            <element signature="e#9634#9712#0" expanded="false" />
             <element signature="n#!!block;n#getAllFiles#0" expanded="false" />
             <element signature="n#!!block;n#getAllFilesConcurrent#0" expanded="false" />
-            <element signature="e#10221#10254#0" expanded="false" />
-            <element signature="e#10286#11108#0" expanded="false" />
-            <element signature="e#10308#10785#0" expanded="false" />
-            <element signature="e#10366#10385#0" expanded="false" />
-            <element signature="e#10599#10765#0" expanded="false" />
-            <element signature="e#10695#10764#0" expanded="false" />
-            <element signature="e#10791#11105#0" expanded="false" />
-            <element signature="e#10865#10966#0" expanded="false" />
-            <element signature="e#11000#11101#0" expanded="false" />
+            <element signature="e#10231#10264#0" expanded="false" />
+            <element signature="e#10296#11118#0" expanded="false" />
+            <element signature="e#10318#10795#0" expanded="false" />
+            <element signature="e#10376#10395#0" expanded="false" />
+            <element signature="e#10609#10775#0" expanded="false" />
+            <element signature="e#10705#10774#0" expanded="false" />
+            <element signature="e#10801#11115#0" expanded="false" />
+            <element signature="e#10875#10976#0" expanded="false" />
+            <element signature="e#11010#11111#0" expanded="false" />
             <element signature="n#!!block;n#getAllFilesHandler#0" expanded="false" />
-            <element signature="e#11274#11416#0" expanded="false" />
-            <element signature="e#11526#11654#0" expanded="false" />
-            <element signature="e#12135#12158#0" expanded="false" />
-            <element signature="e#13050#13073#0" expanded="false" />
-            <element signature="e#13266#13457#0" expanded="false" />
-            <element signature="e#14041#14064#0" expanded="false" />
+            <element signature="e#11284#11426#0" expanded="false" />
+            <element signature="e#11536#11664#0" expanded="false" />
+            <element signature="e#12145#12168#0" expanded="false" />
+            <element signature="e#13060#13083#0" expanded="false" />
+            <element signature="e#13276#13467#0" expanded="false" />
+            <element signature="e#14051#14074#0" expanded="false" />
           </folding>
         </state>
       </provider>
