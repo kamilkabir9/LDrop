@@ -28,7 +28,7 @@ const (
 	FailedStatus  = "Err"
 )
 
-var uploadFolder = "Uploads"
+var uploadFolder string
 
 type onlySuffixFilter struct {
 	set    bool
@@ -37,6 +37,7 @@ type onlySuffixFilter struct {
 
 var oSF onlySuffixFilter
 
+var verbose func(string)
 func (filter *onlySuffixFilter) Set(value string) error {
 	filter.set = true
 	filter.suffix = strings.Split(value, ",")
@@ -49,7 +50,6 @@ func (filter *onlySuffixFilter) filterFile(fileName string) bool {
 				return false
 			}
 		}
-		fmt.Println("ignore")
 		return true
 	}
 	return false
@@ -132,37 +132,38 @@ func (filter *ignoreSuffixFilter) String() string {
 }
 
 func filterFile(fileName string) bool {
-	if iSF.filterFile(fileName) || iPF.filterFile(fileName) ||(ignoreHiddenFiles&&strings.HasPrefix(fileName,"."))|| oSF.filterFile(fileName) {
+	if iSF.filterFile(fileName) || iPF.filterFile(fileName) ||(ignoreHiddenFilesFlag &&strings.HasPrefix(fileName,"."))|| oSF.filterFile(fileName) {
 		return true
 	}
 	return false
 }
 
 var statikFS http.FileSystem
-var ignoreHiddenFolders bool
-var ignoreHiddenFiles bool
-
+var ignoreHiddenFoldersFlag bool
+var ignoreHiddenFilesFlag bool
+var verboseFlag bool
+var err error
 func main() {
 	log.SetFlags(log.Lshortfile)
-	wd, err := os.Getwd()
 	flag.StringVar(&uploadFolder, "folder", uploadFolder, "Root Folder")
-	flag.Var(&iSF, "ignoreSuffix", "input file SUFFIX to exclude")
-	flag.Var(&iPF, "ignorePreffix", "input file PREFFIX to exclude")
-	flag.Var(&oSF, "onlySuffix", "input file SUFFIX to only to include")
-	flag.BoolVar(&ignoreHiddenFolders, "ignoreHiddenFolders", false, "ignoreHiddenFolders")
-	flag.BoolVar(&ignoreHiddenFiles, "ignoreHiddenFiles", false, "ignoreHiddenFiles")
+	flag.Var(&iSF, "ignoreSuffix", "Pass file SUFFIX to exclude Example:\".png,.mp4\"")
+	flag.Var(&iPF, "ignorePreffix", "Pass file PREFFIX to exclude Example:\"PIC-,MOV-\"")
+	flag.Var(&oSF, "onlySuffix", "Pass file SUFFIX to only to include")
+	flag.BoolVar(&ignoreHiddenFoldersFlag, "ignoreHiddenFolders", false, "Pass True to ignore hidden Files")
+	flag.BoolVar(&ignoreHiddenFilesFlag, "ignoreHiddenFiles", false, "Pass True to ignore hidden Folders")
+	flag.BoolVar(&verboseFlag, "v", false, "Pass true to print verbose info")
 	flag.Parse()
-	uploadFolder, err := filepath.Abs(uploadFolder)
+	if verboseFlag{
+		verbose= func(s string) {
+			fmt.Println(s)
+		}
+	}else {
+		verbose= func(s string) {
+		}
+	}
+	uploadFolder, err = filepath.Abs(uploadFolder)
 	if err != nil {
 		log.Panicln(err)
-	}
-	if uploadFolder=="Uploads"{
-		if _, err := os.Stat("Uploads"); os.IsNotExist(err) {
-			err=os.Mkdir("Uploads",0777)
-			if err!=nil{
-				log.Panicln(err)
-			}
-	}
 	}
 	statikFS, err = fs.New()
 	if err != nil {
@@ -183,10 +184,10 @@ func main() {
 	}
 
 	port := strconv.Itoa(listener.Addr().(*net.TCPAddr).Port)
-	fmt.Printf("Strarting Server...\nworkingDir:%v\nrootFolder:%v\nIP address: %v:%v\nFiltering rules\nremoving Files with Suffix:%v,\nremoving Files with Preffix:%v,\nadding Files ony with Suffix:%v\nHide Hidden Files:%v\nHide Hidden Folders:%v\n", wd, uploadFolder, GetOutboundIP(), port, iSF.String(), iPF.String(), oSF.String(),ignoreHiddenFiles,ignoreHiddenFolders)
-	//err = http.ListenAndServe(":"+port, nil)
+	fmt.Printf("Strarting Server...\n########################\nFolder:%v\nIP address: %v:%v\nverbose:%v\nFiltering rules\n------------------------\nIgnoring Files with Suffix(-ignoreSuffix):%v\nIgnoring Files with Preffix(-ignorePreffix):%v\nShowing Files ony with Suffix(-onlySuffix):%v\nHide Hidden Files(-ignoreHiddenFiles):%v\nHide Hidden Folders(-ignoreHiddenFolders):%v\n------------------------\n########################\n",  uploadFolder, GetOutboundIP(), port,verboseFlag, iSF.String(), iPF.String(), oSF.String(), ignoreHiddenFilesFlag, ignoreHiddenFoldersFlag)
+	fmt.Println("Scan QRCode to get IP address")
 	qrterminal.Generate(fmt.Sprintf("%v:%v", GetOutboundIP(), port), qrterminal.M, os.Stdout)
-	open.Run(fmt.Sprintf("http://%v:%v", GetOutboundIP(), port))
+	open.Start(fmt.Sprintf("http://%v:%v", GetOutboundIP(), port))
 	err = http.Serve(listener, nil)
 	if err != nil {
 		log.Println("ERR : ", err)
@@ -225,8 +226,7 @@ func UploadStatusJson(status string, desc string) string {
 
 func upLoadHandler(w http.ResponseWriter, r *http.Request) {
 
-	log.Println("upLoadHandler called")
-	fmt.Println("Downloading File.....")
+	verbose(fmt.Sprintln("Downloading File....."))
 
 	file, fileHeader, err := r.FormFile("fileUpload")
 	if err != nil {
@@ -264,10 +264,10 @@ func upLoadHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	of.Write(fileBytes)
 
-	fmt.Printf("File: %v saved at location: %v\n", fileHeader.Filename, uniqfileName)
+	verbose(fmt.Sprintf("File: %v saved at location: %v\n", fileHeader.Filename, uniqfileName))
 	result := UploadStatusJson(SuccessStatus, fmt.Sprintf("Uploaded file %v", fileHeader.Filename))
 	fmt.Fprint(w, result)
-	fmt.Println("Downloaded File : " + fileHeader.Filename)
+	verbose(fmt.Sprintln("Downloaded File : " + fileHeader.Filename))
 }
 
 //func getUniqFileName check if file with same file name exists .if yes then creates a new file name
@@ -283,14 +283,13 @@ func getUniqFileName(filename string) string {
 		} else {
 			//file.png -> file-1.png
 			uploadFileName = strings.Replace(uploadFileName, path.Ext(uploadFileName), "-"+strconv.Itoa(count)+path.Ext(uploadFileName), 1)
-			log.Println("made uniq!!!!!!!!!!!!")
+			verbose(fmt.Sprint("made uniq!!!!!!!!!!!!"))
 		}
 	}
 	return uploadFileName
 }
 
 func getLastFileHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("getting Last file..")
 	fileList := getAllFiles()
 	lastFile := fileList[0]
 	for _, file := range fileList {
@@ -298,7 +297,7 @@ func getLastFileHandler(w http.ResponseWriter, r *http.Request) {
 			lastFile = file
 		}
 	}
-	fmt.Println("Last file:", lastFile.Name)
+	verbose(fmt.Sprintln("Last file:", lastFile.Name))
 	//Adapted from https://stackoverflow.com/questions/31638447/how-to-server-a-file-from-a-handler-in-golang
 	w.Header().Set("Content-Description", "File Transfer")
 	w.Header().Set("Content-Transfer-Encoding", "binary")
@@ -329,12 +328,12 @@ func getAllFiles() []fileInfo {
 	wg.Add(1)
 	getAllFilesConcurrent(uploadFolder, fileNamesWithTime)
 	wg.Wait()
-	fmt.Println("completed reading Folder")
-	log.Println("Total nuber of Files: ", len(*fileNamesWithTime))
+	verbose(fmt.Sprint("completed reading root Folder"))
+	verbose(fmt.Sprint("Total nuber of Files: ", len(*fileNamesWithTime)))
 	return *fileNamesWithTime
 }
 func getAllFilesConcurrent(Dir string, fileNamesWithTime *[]fileInfo) {
-	fmt.Println("Reading Dir: ", Dir)
+	verbose(fmt.Sprintln("Reading Dir: ", Dir))
 	fileList, err := ioutil.ReadDir(Dir)
 	if err != nil {
 		log.Panicln("ERR : ", err)
@@ -352,10 +351,10 @@ func getAllFilesConcurrent(Dir string, fileNamesWithTime *[]fileInfo) {
 			*fileNamesWithTime = append(*fileNamesWithTime, fileInfo{fileNameKey, file.ModTime().Format(time.ANSIC), humanize.Bytes(uint64(file.Size())), osFileInfo{file.Name(), file.Size(), file.Mode(), file.ModTime(), file.IsDir()}})
 			mx.Unlock()
 		} else {
-			if !(ignoreHiddenFolders && strings.HasPrefix(file.Name(), ".")) {
+			if !(ignoreHiddenFoldersFlag && strings.HasPrefix(file.Name(), ".")) {
 				wg.Add(1)
 				go getAllFilesConcurrent(filepath.Join(Dir, file.Name()), fileNamesWithTime)
-			}else if !ignoreHiddenFolders{
+			}else if !ignoreHiddenFoldersFlag {
 				wg.Add(1)
 				go getAllFilesConcurrent(filepath.Join(Dir, file.Name()), fileNamesWithTime)
 			}
@@ -365,8 +364,7 @@ func getAllFilesConcurrent(Dir string, fileNamesWithTime *[]fileInfo) {
 }
 
 func getAllFilesHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("getting All files..")
-	//var fileNamesWithTime = getAllFiles(uploadFolder)
+	verbose(fmt.Sprint("getting All files.."))
 	var fileNamesWithTime = getAllFiles()
 	fileNamesJson, err := json.Marshal(fileNamesWithTime)
 	if err != nil {
@@ -381,7 +379,6 @@ func getAllFilesHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func getFileHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("getFileHandler")
 	fileName := r.URL.Path
 	fileName = strings.Replace(fileName, "/getFile/", "", -1)
 	fileName, err := url.QueryUnescape(fileName)
@@ -389,22 +386,19 @@ func getFileHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 	}
 	log.Println(fileName)
-	fmt.Println("getting File : ", fileName)
+	verbose(fmt.Sprintln("getting File : ", fileName))
 	http.ServeFile(w, r, path.Join(uploadFolder, fileName))
 	//http.ServeContent(w, r, path.Join(uploadFolder, fileName))
 
 }
 func serveThisFileHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("getFileHandler")
 	fileName := r.URL.Path
 	fileName = strings.Replace(fileName, "/downLoadFile/", "", -1)
 	fileName, err := url.QueryUnescape(fileName)
 	if err != nil {
 		log.Println(err)
 	}
-	//TODO files with sapce not working
-	log.Println(fileName)
-	fmt.Println("getting File : ", fileName)
+	verbose(fmt.Sprintln("serving File : ", fileName))
 	//Adapted from https://stackoverflow.com/questions/31638447/how-to-server-a-file-from-a-handler-in-golang
 	w.Header().Set("Content-Description", "File Transfer")
 	w.Header().Set("Content-Transfer-Encoding", "binary")
@@ -413,7 +407,6 @@ func serveThisFileHandler(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, path.Join(uploadFolder, fileName))
 }
 func viewFileHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("viewFileHandler")
 	f, err := statikFS.Open("/viewFile.html")
 	if err != nil {
 		log.Println(err)

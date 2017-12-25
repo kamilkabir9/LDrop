@@ -63,6 +63,7 @@ if (this.readyState == 4 && this.status == 200) {
 if (response.Status==="Ok"){
     alert(response.Description+" :) ");
     document.getElementById("fileUpload").value = "";
+    listFiles();
 }else {
     alert(response.Description+" :( ");
 
