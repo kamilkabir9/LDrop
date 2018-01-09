@@ -1,6 +1,8 @@
 package main
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -21,8 +23,6 @@ import (
 	"strings"
 	"sync"
 	"time"
-	"crypto/md5"
-	"encoding/hex"
 )
 
 const (
@@ -148,8 +148,9 @@ var verboseFlag bool
 var err error
 var secretFlag string
 var secretFlagMD5 string
+
 func checkSecret(secretEncoded string) bool {
-	if secretEncoded== secretFlagMD5 {
+	if secretEncoded == secretFlagMD5 {
 		return true
 	}
 	verbose(fmt.Sprintf("Secret Failed %v=!%v !!!!!!", secretEncoded, secretFlagMD5))
@@ -157,7 +158,6 @@ func checkSecret(secretEncoded string) bool {
 }
 func main() {
 	log.SetFlags(log.Lshortfile)
-	flag.StringVar(&uploadFolder, "folder", uploadFolder, "Root Folder")
 	flag.StringVar(&secretFlag, "secret", "007Jb", "Pass secret code.")
 	flag.Var(&iSF, "ignoreSuffix", "Pass file SUFFIX to exclude Example:\".png,.mp4\"")
 	flag.Var(&iPF, "ignorePreffix", "Pass file PREFFIX to exclude Example:\"PIC-,MOV-\"")
@@ -176,11 +176,22 @@ func main() {
 	}
 	hasher := md5.New()
 	hasher.Write([]byte(secretFlag))
-	secretFlagMD5=hex.EncodeToString(hasher.Sum(nil))
-	wd,err:=os.Getwd()
-	uploadFolder, err = filepath.Abs(wd)
-	if err != nil {
-		log.Panicln(err)
+	secretFlagMD5 = hex.EncodeToString(hasher.Sum(nil))
+	args := flag.Args()
+	if len(args) == 0 {
+		wd, err := os.Getwd()
+		if err != nil {
+			log.Panicln(err)
+		}
+		uploadFolder, err = filepath.Abs(wd)
+		if err != nil {
+			log.Panicln(err)
+		}
+	} else {
+		uploadFolder, err = filepath.Abs(args[0])
+		if err != nil {
+			log.Panicln(err)
+		}
 	}
 	statikFS, err = fs.New()
 	if err != nil {
@@ -395,7 +406,7 @@ func getAllFilesHandler(w http.ResponseWriter, r *http.Request) {
 	if !checkSecret(r.Header.Get("secret")) {
 		verbose("Got wrong secret from client")
 		result := UploadStatusJson(FailedStatus, "secret mismatch")
-	fmt.Fprintln(w, result)
+		fmt.Fprintln(w, result)
 		return
 	}
 	var fileNamesWithTime = getAllFiles()
@@ -413,11 +424,11 @@ func getAllFilesHandler(w http.ResponseWriter, r *http.Request) {
 
 func getFileHandler(w http.ResponseWriter, r *http.Request) {
 	u, err := url.ParseQuery(r.URL.RawQuery)
-    if err != nil {
-        panic(err)
-    }
-	fileName :=u["fileName"][0]
-	if fileName==""{
+	if err != nil {
+		panic(err)
+	}
+	fileName := u["fileName"][0]
+	if fileName == "" {
 		verbose("Error getting file name !!!")
 		fmt.Fprint(w, fmt.Sprintf("Error getting file name from URL !!!"))
 		return
@@ -426,8 +437,8 @@ func getFileHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(err)
 	}
-	secretRcvd :=u["secret"][0]
-	if secretRcvd==""{
+	secretRcvd := u["secret"][0]
+	if secretRcvd == "" {
 		verbose("Error getting file name !!!")
 		fmt.Fprint(w, fmt.Sprintf("Error getting secret URL !!!"))
 		return
@@ -444,11 +455,11 @@ func getFileHandler(w http.ResponseWriter, r *http.Request) {
 }
 func serveThisFileHandler(w http.ResponseWriter, r *http.Request) {
 	u, err := url.ParseQuery(r.URL.RawQuery)
-    if err != nil {
-        panic(err)
-    }
-	fileName :=u["fileName"][0]
-	if fileName==""{
+	if err != nil {
+		panic(err)
+	}
+	fileName := u["fileName"][0]
+	if fileName == "" {
 		verbose("Error getting file name !!!")
 		fmt.Fprint(w, fmt.Sprintf("Error getting file name from URL !!!"))
 		return
@@ -457,8 +468,8 @@ func serveThisFileHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(err)
 	}
-	secretRcvd :=u["secret"][0]
-	if secretRcvd==""{
+	secretRcvd := u["secret"][0]
+	if secretRcvd == "" {
 		verbose("Error getting file name !!!")
 		fmt.Fprint(w, fmt.Sprintf("Error getting secret URL !!!"))
 		return
