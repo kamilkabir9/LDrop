@@ -19,10 +19,10 @@ LDrop have the following options.
   -v	Pass true to print verbose info
 ```
 ### Installing
--Download a respective binary from release page .
--(Optional) Add LDrop to your path .
--Run it.
--Scan the QRcode on you mobile ;to view or upload files.
+ - Download a respective binary from release page .
+ - (Optional) Add LDrop to your path .
+ - Run it.
+ - Scan the QRcode on you mobile ;to view or upload files.
 Example: ```LDrop -v -onlySuffix=.mp4 ./Downloads```
 
 ## License
