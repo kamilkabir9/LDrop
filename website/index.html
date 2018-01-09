@@ -90,7 +90,7 @@ if (response.Status==="Ok"){
 }
 };
     xhr.open('POST', '/upload', true);
-    xhr.setRequestHeader("secret", secret);
+    xhr.setRequestHeader("secret", getSecret());
     xhr.send(formData);
 };
 
