@@ -19,7 +19,7 @@ LDrop have the following options.
   -v	Pass true to print verbose info
 ```
 ### Installing
- - Download a respective binary from release page .
+ - Download a respective binary from [here](https://github.com/kamilkabir9/LDrop/releases/latest) .
  - (Optional) Add LDrop to your path .
  - Run it.
  - Scan the QRcode on you mobile ;to view or upload files.
