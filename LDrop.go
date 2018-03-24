@@ -214,7 +214,7 @@ func main() {
 	port := strconv.Itoa(listener.Addr().(*net.TCPAddr).Port)
 	fmt.Printf("Strarting Server...\n########################\nFolder:%v\nSecret:%v\nIP address: %v:%v\nverbose:%v\nFiltering rules\n------------------------\nIgnoring Files with Suffix(-ignoreSuffix):%v\nIgnoring Files with Preffix(-ignorePreffix):%v\nShowing Files ony with Suffix(-onlySuffix):%v\nHide Hidden Files(-ignoreHiddenFiles):%v\nHide Hidden Folders(-ignoreHiddenFolders):%v\n------------------------\n########################\n", uploadFolder, secretFlag, GetOutboundIP(), port, verboseFlag, iSF.String(), iPF.String(), oSF.String(), ignoreHiddenFilesFlag, ignoreHiddenFoldersFlag)
 	fmt.Println("Scan QRCode to get IP address")
-	qrterminal.Generate(fmt.Sprintf("%v:%v", GetOutboundIP(), port), qrterminal.M, os.Stdout)
+	qrterminal.GenerateHalfBlock(fmt.Sprintf("http://%v:%v", GetOutboundIP(), port), qrterminal.L, os.Stdout)
 	open.Start(fmt.Sprintf("http://%v:%v", GetOutboundIP(), port))
 	err = http.Serve(listener, nil)
 	if err != nil {
