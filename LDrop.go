@@ -484,7 +484,8 @@ func serveThisFileHandler(w http.ResponseWriter, r *http.Request) {
 	//Adapted from https://stackoverflow.com/questions/31638447/how-to-server-a-file-from-a-handler-in-golang
 	w.Header().Set("Content-Description", "File Transfer")
 	w.Header().Set("Content-Transfer-Encoding", "binary")
-	w.Header().Set("Content-Disposition", "attachment; filename="+fileName)
+	//Adapted from https://stackoverflow.com/questions/13578428/duplicate-headers-received-from-server/25844041#25844041
+	w.Header().Set("Content-Disposition", "attachment; filename="+"\""+fileName+"\"")
 	w.Header().Set("Content-Type", "application/octet-stream")
 	http.ServeFile(w, r, path.Join(uploadFolder, fileName))
 }
