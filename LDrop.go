@@ -6,13 +6,9 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/dustin/go-humanize"
-	_ "github.com/kamilkabir9/LDrop/statik" // NOTE: Replace with the absolute import path
-	"github.com/mdp/qrterminal"
-	"github.com/rakyll/statik/fs"
-	"github.com/skratchdot/open-golang/open"
 	"io/ioutil"
 	"log"
+	"math/rand"
 	"net"
 	"net/http"
 	"net/url"
@@ -23,6 +19,12 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/dustin/go-humanize"
+	_ "github.com/kamilkabir9/LDrop/statik" // NOTE: Replace with the absolute import path
+	"github.com/mdp/qrterminal"
+	"github.com/rakyll/statik/fs"
+	"github.com/skratchdot/open-golang/open"
 )
 
 const (
@@ -148,6 +150,8 @@ var verboseFlag bool
 var err error
 var secretFlag string
 var secretFlagMD5 string
+var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+var defaultSecret string
 
 func checkSecret(secretEncoded string) bool {
 	if secretEncoded == secretFlagMD5 {
@@ -156,9 +160,21 @@ func checkSecret(secretEncoded string) bool {
 	verbose(fmt.Sprintf("Secret Failed %v=!%v !!!!!!", secretEncoded, secretFlagMD5))
 	return false
 }
+
+// generate random secret
+func randSecret(n int) string {
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letters[rand.Intn(len(letters))]
+	}
+	return string(b)
+}
+
 func main() {
+	rand.Seed(time.Now().UnixNano())
+	defaultSecret = randSecret(5)
 	log.SetFlags(log.Lshortfile)
-	flag.StringVar(&secretFlag, "secret", "007Jb", "Pass secret code.")
+	flag.StringVar(&secretFlag, "secret", defaultSecret, "Pass secret code.")
 	flag.Var(&iSF, "ignoreSuffix", "Pass file SUFFIX to exclude Example:\".png,.mp4\"")
 	flag.Var(&iPF, "ignorePreffix", "Pass file PREFFIX to exclude Example:\"PIC-,MOV-\"")
 	flag.Var(&oSF, "onlySuffix", "Pass file SUFFIX to only to include")
@@ -364,7 +380,7 @@ var mx sync.Mutex
 func getAllFiles() []fileInfo {
 	var fileNamesWithTime = new([]fileInfo)
 	wg.Add(1)
-	getAllFilesConcurrent(uploadFolder, fileNamesWithTime)
+	go getAllFilesConcurrent(uploadFolder, fileNamesWithTime)
 	wg.Wait()
 	verbose(fmt.Sprint("completed reading root Folder"))
 	verbose(fmt.Sprint("Total nuber of Files: ", len(*fileNamesWithTime)))
